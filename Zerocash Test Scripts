@@ -1,0 +1,57 @@
+// Zerocash Example Transactions for Remix IDE
+// Use these scripts directly in the Remix console or as JavaScript files.
+
+async function main() {
+    // Access the deployed Zerocash contract
+    const zerocash = await ethers.getContractAt("Zerocash", "<DEPLOYED_CONTRACT_ADDRESS>");
+
+    // Mint a new coin
+    async function mintCoin() {
+        const commitment = ethers.utils.formatBytes32String("commitment1");
+        const leafHash = ethers.utils.formatBytes32String("leafHash1");
+
+        const tx = await zerocash.mint(commitment, leafHash);
+        console.log("Mint transaction hash:", tx.hash);
+
+        // Verify minting
+        const coin = await zerocash.coins(commitment);
+        console.log("Coin minted:", coin);
+    }
+
+    // Update the Merkle root
+    async function updateMerkleRoot() {
+        const newRoot = ethers.utils.formatBytes32String("newMerkleRoot");
+
+        const tx = await zerocash.updateMerkleRoot(newRoot);
+        console.log("Update Merkle root transaction hash:", tx.hash);
+
+        // Verify the new Merkle root
+        const root = await zerocash.merkleRoot();
+        console.log("New Merkle root:", root);
+    }
+
+    // Spend a coin
+    async function spendCoin() {
+        const nullifier = ethers.utils.formatBytes32String("nullifier1");
+        const newCommitment = ethers.utils.formatBytes32String("newCommitment1");
+        const merkleProof = []; // Use an empty proof for this example
+
+        const tx = await zerocash.spend(nullifier, newCommitment, merkleProof);
+        console.log("Spend transaction hash:", tx.hash);
+
+        // Verify nullifier and new coin
+        const isSpent = await zerocash.nullifiers(nullifier);
+        console.log("Nullifier spent:", isSpent);
+
+        const newCoin = await zerocash.coins(newCommitment);
+        console.log("New coin created:", newCoin);
+    }
+
+    // Call the functions sequentially
+    await mintCoin();
+    await updateMerkleRoot();
+    await spendCoin();
+}
+
+// Run the script
+main().catch(console.error);
