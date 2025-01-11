@@ -1,72 +1,57 @@
 # Zerocash Smart Contract
 
-Zerocash is a Solidity-based smart contract designed to implement anonymous digital payments using cryptographic commitments and zk-SNARKs. This repository contains the contract, test scripts, and example transactions to interact with the Zerocash system.
+Zerocash is a Solidity-based smart contract designed to implement anonymous digital payments using cryptographic commitments and zk-SNARKs. This repository contains the contract and test scripts to interact with the Zerocash system using Remix.
 
 ## Features
 - **Mint**: Create new private coins by submitting commitments.
 - **Spend**: Spend existing coins by proving validity and generating new commitments.
 - **Update Merkle Root**: Maintain the Merkle tree's root to ensure transaction validity.
 
-## Project Structure
+## Repository Structure
 ```
 zerocash/
-├── contracts/
-│   └── Zerocash.sol          # Main smart contract
-├── scripts/
-│   └── exampleTransactions.js  # Example scripts for Remix
-├── test/
-│   └── Zerocash.test.js       # Hardhat test scripts
-├── README.md                  # Project documentation
-├── package.json               # Project dependencies
-└── hardhat.config.js          # Hardhat configuration
+├── LICENSE                   # License information
+├── README.md                 # Project documentation
+├── Zerocash.sol              # Main smart contract
+├── Zerocash Test Scripts     # Test scripts for Remix IDE
 ```
 
 ## Prerequisites
-1. **Node.js**: Install the latest LTS version from [Node.js](https://nodejs.org/).
-2. **Hardhat**: Install using:
-   ```bash
-   npm install --save-dev hardhat
-   ```
-3. **Remix IDE**: Access [Remix](https://remix.ethereum.org) for contract testing in a browser.
-4. **Ethers.js**: Ensure `ethers.js` is available for JavaScript interaction.
+1. **Remix IDE**: Access [Remix](https://remix.ethereum.org) for contract deployment and testing.
+2. **Ethers.js**: Ensure `ethers.js` is available for JavaScript interaction if using the console.
 
-## Deployment Steps (Hardhat)
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd zerocash
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Compile the contract:
-   ```bash
-   npx hardhat compile
-   ```
-4. Deploy the contract:
-   ```bash
-   npx hardhat run scripts/deploy.js --network localhost
-   ```
+## Deployment Steps (Remix)
+1. Open [Remix](https://remix.ethereum.org).
+2. Create a new file named `Zerocash.sol` and paste the contract code.
+3. Compile the contract using the Solidity compiler.
+4. Deploy the contract in the Remix VM environment or a connected network.
 
-## Testing
+## Testing in Remix
 
-### Hardhat Test
-1. Run test cases:
-   ```bash
-   npx hardhat test
-   ```
-2. Sample test results:
-   - Mint a coin: Verified by checking event logs and mapping entries.
-   - Spend a coin: Verified nullifier status and creation of new commitment.
-   - Update Merkle Root: Verified root change with `merkleRoot()`.
+### Using the Remix Interface
+1. **Mint a Coin**:
+   - Use the `mint` function with:
+     - `_commitment`: A unique 32-byte hex value (e.g., `0x123456789abcdef123456789abcdef123456789abcdef123456789abcdef1234`).
+     - `_leafHash`: A unique 32-byte hex value (e.g., `0x56789abcdef123456789abcdef123456789abcdef123456789abcdef12345678`).
+   - Verify the `Mint` event is emitted and the coin is added.
 
-### Remix IDE Test
-1. Deploy the contract in Remix IDE.
-2. Use the provided example transaction scripts in the `scripts/` folder:
-   - `mintCoin()`: Mint a new coin.
-   - `updateMerkleRoot()`: Update the Merkle root.
-   - `spendCoin()`: Spend a coin and generate a new one.
+2. **Update Merkle Root**:
+   - Use the `updateMerkleRoot` function with:
+     - `_newRoot`: A unique 32-byte hex value (e.g., `0x9999999999999999999999999999999999999999999999999999999999999999`).
+   - Verify the `merkleRoot` function reflects the updated root.
+
+3. **Spend a Coin**:
+   - Use the `spend` function with:
+     - `_nullifier`: A unique 32-byte hex value for the coin being spent.
+     - `_newCommitment`: A unique 32-byte hex value for the new coin.
+     - `_merkleProof`: An empty array (`[]`) for this example.
+   - Verify the `Spend` event is emitted and the nullifier is marked as spent.
+
+### Using Test Scripts in Remix
+1. Create a new JavaScript file and paste the `Zerocash Test Scripts` code.
+2. Replace `<DEPLOYED_CONTRACT_ADDRESS>` with the deployed contract address.
+3. Run the script using the Remix console or right-click the file and select **Run**.
+4. Observe the output in the Remix terminal for transaction details and confirmations.
 
 ## Example Transactions
 ### Mint a Coin
